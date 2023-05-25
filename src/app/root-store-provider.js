@@ -1,7 +1,5 @@
 import { RootStoreContext } from "./root-store-context";
 
-
-
 export const RootStoreProvider = ({children,rootStore}) => {
     
   return (

@@ -4,6 +4,10 @@ class Api {
         this._headers = config.headers;
     }
 
+    notions = async () =>{
+        
+    }
+
     getAccountSettings = async (idInstance, apiTokenInstance) => {
         try {
            const res = await fetch(`${this._baseUrl}/waInstance${idInstance}/getSettings/${apiTokenInstance}`, {
@@ -16,17 +20,20 @@ class Api {
             console.log(error);
             return undefined;
         }
-        
       }
 
     getDataContact = async (idInstance, apiTokenInstance, chatId) => {
-        const res = await fetch(`${this._baseUrl}/waInstance${idInstance}/getContactInfo/${apiTokenInstance}`, {
-            method: 'POST',
-            headers: this._headers,
-            body: JSON.stringify({ chatId: `${chatId}@c.us` })
-        });
-        const data = await res.json();
-        return data;
+        try {
+            const res = await fetch(`${this._baseUrl}/waInstance${idInstance}/getContactInfo/${apiTokenInstance}`, {
+                method: 'POST',
+                headers: this._headers,
+                body: JSON.stringify({ chatId: `${chatId}@c.us` })
+            });
+            const data = await res.json();
+            return data;
+        } catch (error) {
+            return undefined;
+        }
     }
 
     sendMessage = async(idInstance, apiTokenInstance, chatId, message) => {
