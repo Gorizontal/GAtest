@@ -24,7 +24,8 @@ export class RootStore {
     errorInput = false
     loaderAddNumber = false
     userInformation = {}
-
+    errorInputHeader = false
+    errorInputHeaderLength = false
     getMessages = []
 
     constructor() {
@@ -55,7 +56,6 @@ export class RootStore {
         } finally {
             this.loader = false
         }
-
        } 
        this.loader = false
     }
@@ -63,8 +63,7 @@ export class RootStore {
     confirmAuth = async () => {
             this.loader = true;
             const req = await this.api.getAccountSettings( this.idInstance, this.tokenInstance);
-            this.userData = req;
-            
+            this.userData = req;    
             if(this.userData !== undefined){
                 if(this.checked){
                     localStorage.setItem('greenapi', JSON.stringify({
@@ -80,7 +79,6 @@ export class RootStore {
                     this.userIMG = data.avatar 
                     this.error = false;
                 })
-
                 this.updateAuth(true);
             } else {
                 this.error = true;
@@ -91,8 +89,23 @@ export class RootStore {
 
     getDataOnNumber = async (numberPhone) => {
             this.loaderAddNumber = true;
-            const res = await api.getDataContact(this.idInstance, this.tokenInstance, numberPhone)
-            
+            if(numberPhone.length !== 11 ){
+                this.errorInputHeaderLength = true;
+                this.loaderAddNumber = false;
+                setTimeout(()=>{this.errorInputHeaderLength = false}, 2000)
+                return
+            }
+            for(let user of this.usersDatas){
+                if(user.chatId.includes(numberPhone)){
+                    this.loaderAddNumber = false;
+                    this.errorInputHeader = true
+                    setTimeout(()=>{this.errorInputHeader = false}, 2000)
+                    return
+                }
+            }
+            this.errorInputHeaderLength = false;
+            this.errorInputHeader = false
+            const res = await api.getDataContact(this.idInstance, this.tokenInstance, numberPhone)      
             if(res){
                 this.validNumber = true;
                 const localSt = JSON.parse(localStorage.getItem('greenapi'));
@@ -104,21 +117,16 @@ export class RootStore {
             } else {
                 this.validNumber = false;
             }
-
-            this.loaderAddNumber = false;
-            console.log(res, this.validNumber, toJS(this.usersDatas));
-       
+            this.loaderAddNumber = false;       
     }
     
     updateActiveChatUser = (index) =>{
         this._activeChatUser = this.usersDatas[index];
         this.errorInput = false;
-        console.log(toJS(this.userData))
     }
 
     updateLabel = (label)=>{
         this.label = label
-        console.log('label', label)
     }
 
     updateTokenInstance = (tokenInstance) => {
@@ -142,7 +150,6 @@ export class RootStore {
     }
 
     updateNUmberinterlocutor=(number)=>{
-        console.log(number)
         this.numberInterlocutor = number;
     }
 
@@ -165,8 +172,7 @@ export class RootStore {
         this.errorInput = true      
     }
 
-    getNoties = ()=>{
-                
+    getNoties = ()=>{         
       setInterval( ()=>{
         api.getMessage(this.idInstance, this.tokenInstance)
             .then((data)=>{
@@ -178,10 +184,8 @@ export class RootStore {
                                     send: false
                                 })
                             }
-
                             return user
                         })
-                        console.log(toJS(this.usersDatas))
                         const localSt = JSON.parse(localStorage.getItem('greenapi'));
                         if(localSt){
                             localStorage.setItem('greenapi', JSON.stringify({

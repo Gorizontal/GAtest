@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { useEffect, useState } from 'react'
-import { RootStore } from '../../app/root-store';
+import React from 'react'
 import { useRootStore } from '../../app/use-root-store';
 
 export const Interlocutor = observer(({

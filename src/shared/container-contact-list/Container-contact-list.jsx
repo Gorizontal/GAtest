@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Interlocutor } from '../interlocutor-form/Interlocutor'
 import { observer } from 'mobx-react-lite'
-import { toJS } from 'mobx'
-import { RootStore } from '../../app/root-store';
 import { useRootStore } from '../../app/use-root-store';
 
 export const ContainerContactList = observer(() => {

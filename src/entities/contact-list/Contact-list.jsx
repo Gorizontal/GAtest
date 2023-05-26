@@ -1,6 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, {useEffect, useState} from 'react'
-import { RootStore } from '../../app/root-store';
+import React, {useState} from 'react'
 import { HeaderContactList } from '../../shared/header-contact-list/Header-contact-list';
 import { ContainerContactList } from '../../shared/container-contact-list/Container-contact-list';
 import { useRootStore } from '../../app/use-root-store';
@@ -13,7 +12,7 @@ export const ContactList = observer(({
 }) => {
 
 
-  const { label, getDataOnNumber, usersDatas, loaderAddNumber} = useRootStore()
+  const { getDataOnNumber, usersDatas, loaderAddNumber, errorInputHeader, errorInputHeaderLength} = useRootStore()
   
   const [valueInputHeader, setValueInputHeader] = useState('')  
   const [validateNumber, setVaidateNumber] = useState(false)
@@ -22,7 +21,6 @@ export const ContactList = observer(({
   const onChangeInputHeader = (event) =>{
         event.preventDefault();
         setValueInputHeader(event.target.value)
-        console.log(event.target.value)
   }
   
   const addNumberPhone = ()=>{
@@ -46,6 +44,8 @@ export const ContactList = observer(({
             onChange={onChangeInputHeader}
             addChat= {addNumberPhone}
             loaderAddNumber= {loaderAddNumber}
+            errorInputHeader={errorInputHeader}
+            errorInputHeaderLength= {errorInputHeaderLength}
              />
 
          <ContainerContactList data={data} updateLabel={updateLabel}/>   
