@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
-import { ContactList } from '../contact-list/Contact-list'
-import { Chat } from '../chat/Chat'
+import { ContactList } from './entities/contact-list/Contact-list'
+import { Chat } from './entities/chat/Chat'
 
 const Messager = observer(({
   userIMG,
