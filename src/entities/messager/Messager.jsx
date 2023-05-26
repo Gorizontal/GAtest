@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite'
 import { ContactList } from '../contact-list/Contact-list'
 import { Chat } from '../chat/Chat'
 
-export const Messager = observer(({
+const Messager = observer(({
   userIMG,
   wid,
   loader,
@@ -39,3 +39,4 @@ export const Messager = observer(({
   )
 })
 
+export default Messager

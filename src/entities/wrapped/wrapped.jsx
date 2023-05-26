@@ -1,8 +1,7 @@
 import { observer } from 'mobx-react-lite'
-import { RootStore } from '../../app/root-store';
 import {useEffect, useState} from "react"
 import { Login } from '../login/ui/Login';
-import { Messager } from '../messager/messager';
+import Messager from '../messager/messager';
 import { useRootStore } from '../../app/use-root-store';
 
 export const Wrapped = observer(() => {
@@ -19,7 +18,6 @@ export const Wrapped = observer(() => {
     updateChecked,
     userIMG,
     wid,
-    usersDatas,
     label,
     updateLabel
   } = useRootStore();
@@ -42,7 +40,6 @@ export const Wrapped = observer(() => {
   useEffect(()=>{
     updateChecked(check);
   },[check,isAuthenticated]);
-
 
 
 
