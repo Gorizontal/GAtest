@@ -22,12 +22,12 @@ export const Login = observer(
                 <Input 
                   changeInput = {changeId} 
                   label='Введите Id Instance'
-                  className='border-green-500'
+                  className='border-green-500 w-48'
                 />
                 <Input 
                   changeInput = {changeToken} 
                   label='Введите Api Token Instance'
-                  className='border-green-500'
+                  className='border-green-500 w-48'
                 />
                 <button onClick={confirmAuth} className='border-2  w-48 h-10 active:bg-green-200 bg-green-400 rounded hover:bg-green-600 mb-4'>Войти</button>
                 <div className='flex justify-center w-full'>

@@ -6,7 +6,10 @@ import { Chat } from '../chat/Chat'
 export const Messager = observer(({
   userIMG,
   wid,
-  loader
+  loader,
+  data,
+  label,
+  updateLabel
 }) => {
 
 
@@ -14,14 +17,18 @@ export const Messager = observer(({
     <div className='w-full h-full bg-slate-400 flex justify-center'>
       {
         loader ? (<div>Loading...</div>) : (
-          <div className='flex w-11/12  bg-slate-200 -mt-10'>
+          <div className='flex w-11/12  bg-slate-200 -mt-10 h-4/5'>
               <div className='w-1/3 '>
                 <ContactList userIMG={userIMG}
                       wid = {wid}
-                      loader={loader}/>
+                      loader={loader}
+                      data={data}
+                      updateLabel={updateLabel}/>
               </div>
               <div className='w-2/3'>
-                  <Chat/>
+                  <Chat label={label}
+                        userIMG={userIMG}
+                        wid = {wid}/>
               </div>
           </div>
 

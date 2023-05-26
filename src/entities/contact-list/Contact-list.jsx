@@ -2,19 +2,22 @@ import { observer } from 'mobx-react-lite'
 import React, {useEffect, useState} from 'react'
 import { RootStore } from '../../app/root-store';
 import { HeaderContactList } from '../../shared/header-contact-list/Header-contact-list';
+import { ContainerContactList } from '../../shared/container-contact-list/Container-contact-list';
+import { useRootStore } from '../../app/use-root-store';
 
 export const ContactList = observer(({  
   userIMG,
   wid,
-  loader
+  loader,
+  updateLabel
 }) => {
-    const [rootStore] = useState(() => new RootStore());
-    const {
-      getDataOnNumber
-    } = rootStore;  
+
+
+  const { label, getDataOnNumber, usersDatas, loaderAddNumber} = useRootStore()
   
   const [valueInputHeader, setValueInputHeader] = useState('')  
   const [validateNumber, setVaidateNumber] = useState(false)
+  const [data, setData] = useState([])
   
   const onChangeInputHeader = (event) =>{
         event.preventDefault();
@@ -25,8 +28,12 @@ export const ContactList = observer(({
   const addNumberPhone = ()=>{
     if(valueInputHeader.trim().length > 0 ){
     getDataOnNumber(valueInputHeader)
+    setData(usersDatas)
+    setValueInputHeader('')
   }
 }
+
+
 
 
   return (
@@ -37,7 +44,11 @@ export const ContactList = observer(({
             loader={loader}
             value = {valueInputHeader}
             onChange={onChangeInputHeader}
-            addChat= {addNumberPhone} />
+            addChat= {addNumberPhone}
+            loaderAddNumber= {loaderAddNumber}
+             />
+
+         <ContainerContactList data={data} updateLabel={updateLabel}/>   
     </div>
   )
 })

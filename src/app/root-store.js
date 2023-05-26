@@ -5,8 +5,8 @@ import { api } from "../api/api";
 
 export class RootStore {
 
-    _tokenInstance = '42c712e798e74c66b78aadb945359ca96734e4c7969e4e80af';
-    _idInstance = '1101823652';
+    _tokenInstance = '';
+    _idInstance = '';
     _wid = '';
     loader = false;
     error = false;
@@ -15,6 +15,17 @@ export class RootStore {
     checked = false;
     userIMG = '';
     validNumber = null;
+    usersDatas = [];
+    label = ''
+    imgInterlocutor = ''
+    numberInterlocutor = ''
+    messages = []
+    _activeChatUser = {}
+    errorInput = false
+    loaderAddNumber = false
+    userInformation = {}
+
+    getMessages = []
 
     constructor() {
         makeAutoObservable(this);
@@ -32,6 +43,7 @@ export class RootStore {
             this._tokenInstance = localSt.token;
             this._isAuthenticated = true;
             this.userData = localSt;
+            this.usersDatas = this.userData.usersDatas
         })
         try {
             const data = await api.getDataContact(localSt.id, localSt.token, localSt.wid.slice(0,11))
@@ -59,7 +71,7 @@ export class RootStore {
                         wid: req.wid,
                         id: this.idInstance,
                         token: this.tokenInstance,
-                        user: []
+                        usersDatas: []
                     }))
                 };
                 this._wid = req.wid
@@ -78,21 +90,35 @@ export class RootStore {
     }
 
     getDataOnNumber = async (numberPhone) => {
+            this.loaderAddNumber = true;
             const res = await api.getDataContact(this.idInstance, this.tokenInstance, numberPhone)
             
             if(res){
                 this.validNumber = true;
                 const localSt = JSON.parse(localStorage.getItem('greenapi'));
                 if(localSt){
-                    localSt.user.push({...res, messages: []})
-                    localStorage.setItem('greenapi', JSON.stringify(localSt))
+                   localSt.usersDatas.push({...res, messages: []})
+                   localStorage.setItem('greenapi', JSON.stringify(localSt))
                 }
+                this.usersDatas.push({...res, messages: []})
             } else {
                 this.validNumber = false;
             }
-            
-            console.log(res, this.validNumber);
+
+            this.loaderAddNumber = false;
+            console.log(res, this.validNumber, toJS(this.usersDatas));
        
+    }
+    
+    updateActiveChatUser = (index) =>{
+        this._activeChatUser = this.usersDatas[index];
+        this.errorInput = false;
+        console.log(toJS(this.userData))
+    }
+
+    updateLabel = (label)=>{
+        this.label = label
+        console.log('label', label)
     }
 
     updateTokenInstance = (tokenInstance) => {
@@ -111,6 +137,71 @@ export class RootStore {
         this.checked = checked;
     }
 
+    updateIMGinterlocutor=(urlImg)=>{
+        this.imgInterlocutor = urlImg;
+    }
+
+    updateNUmberinterlocutor=(number)=>{
+        console.log(number)
+        this.numberInterlocutor = number;
+    }
+
+    sendMessage =async (message)=>{
+        if(this._activeChatUser.chatId){
+            this._activeChatUser.messages.push({message: message, send: true})
+            this.errorInput = false
+            const localSt = JSON.parse(localStorage.getItem('greenapi'));
+            if(localSt){
+                localStorage.setItem('greenapi', JSON.stringify({
+                    wid: this._wid,
+                    id: this.idInstance,
+                    token: this.tokenInstance,
+                    usersDatas: [...this.usersDatas]
+                }))
+            }
+            await api.sendMessage(this.idInstance, this.tokenInstance, this._activeChatUser.chatId, message)
+            return
+        }
+        this.errorInput = true      
+    }
+
+    getNoties = ()=>{
+                
+      setInterval( ()=>{
+        api.getMessage(this.idInstance, this.tokenInstance)
+            .then((data)=>{
+                if(data && data.body.typeWebhook === 'incomingMessageReceived'){
+                        this.usersDatas.map((user)=>{
+                            if( user.chatId === data.body.senderData.chatId){
+                                user.messages.push({
+                                    message: data.body.messageData.textMessageData.textMessage,
+                                    send: false
+                                })
+                            }
+
+                            return user
+                        })
+                        console.log(toJS(this.usersDatas))
+                        const localSt = JSON.parse(localStorage.getItem('greenapi'));
+                        if(localSt){
+                            localStorage.setItem('greenapi', JSON.stringify({
+                                wid: this._wid,
+                                id: this.idInstance,
+                                token: this.tokenInstance,
+                                usersDatas: [...this.usersDatas]
+                            }))
+                        }      
+                }
+                if(data){
+                    api.deleteMessage(this.idInstance, this.tokenInstance, data.receiptId)
+                }
+
+               return data
+            })
+
+        },5000)
+    }
+
     get tokenInstance () {
         return this._tokenInstance;
     }
@@ -126,5 +217,10 @@ export class RootStore {
     get wid () {
         return this._wid;
     }
+
+    get activeChatUser () {
+        return this._activeChatUser;
+    }
+
 
 }

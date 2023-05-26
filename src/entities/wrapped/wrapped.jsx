@@ -2,13 +2,13 @@ import { observer } from 'mobx-react-lite'
 import { RootStore } from '../../app/root-store';
 import {useEffect, useState} from "react"
 import { Login } from '../login/ui/Login';
-import { Messager } from '../messager/Messager';
+import { Messager } from '../messager/messager';
+import { useRootStore } from '../../app/use-root-store';
 
 export const Wrapped = observer(() => {
 
-  const [a, setA] = useState('')
   const [check, setCheck] = useState(false);
-  const [rootStore] = useState(() => new RootStore());
+
   const {
     updateIdInstance, 
     updateTokenInstance, 
@@ -18,8 +18,14 @@ export const Wrapped = observer(() => {
     error, 
     updateChecked,
     userIMG,
-    wid
-  } = rootStore;
+    wid,
+    usersDatas,
+    label,
+    updateLabel
+  } = useRootStore();
+
+
+
 
   const handleCheck = () =>{
     setCheck( check => check = !check);
@@ -35,8 +41,11 @@ export const Wrapped = observer(() => {
 
   useEffect(()=>{
     updateChecked(check);
- 
   },[check,isAuthenticated]);
+
+
+
+
 
   return (
         !isAuthenticated ? (
@@ -50,7 +59,10 @@ export const Wrapped = observer(() => {
         ) : (
             <Messager userIMG={userIMG}
                       wid = {wid}
-                      loader={loader}/>
+                      loader={loader}
+                      label={label}
+                      updateLabel={updateLabel}
+                   />
         )
   );
 })

@@ -12,7 +12,9 @@ export const Input = ({changeInput, className, label, ...otherProps}) => {
                     debounceTimeout={1000}
                     onChange={changeInput}
                     type="text"
-                    className={`border rounded w-48  focus-visible:border-2 outline-none ${className}`}
+                    className={`border rounded focus-visible:border-2 outline-none ${className}`
+                    
+                  }
                      />
          </div>
   )
