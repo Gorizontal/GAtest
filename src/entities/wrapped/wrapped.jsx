@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite'
 import {useEffect, useState} from "react"
 import { Login } from '../login/ui/Login';
-import Messager from '../messager/messager';
 import { useRootStore } from '../../app/use-root-store';
+import Messager from '../messager/messager';
 
 export const Wrapped = observer(() => {
 
