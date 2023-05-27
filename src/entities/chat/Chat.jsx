@@ -59,7 +59,7 @@ const [message, setMessage] = useState('')
         }
       </div>
       <form className='flex flex-col justify-center items-center h-16 w-full bg-slate-300 p-4' onSubmit={sendMessages}>
-        <input type="text"  className='border focus-visible:border-2 outline-none  rounded-lg w-2/3 h-8' onChange={changeInput} value={message}/>
+        <input type="text"  className='border focus-visible:border-2 outline-none  rounded-lg w-full md:w-10/12 h-8' onChange={changeInput} value={message}/>
         {errorInput ? (<div className='text-sm'>Выберите пользователя для общения</div>) : null}
       </form>
     </div>

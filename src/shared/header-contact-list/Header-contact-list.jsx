@@ -8,14 +8,14 @@ export const HeaderContactList = observer(({wid, userIMG, onChange, value, addCh
 
   return (
     <div className='flex flex-col bg-slate-200 w-full border-b border-opacity-20'>
-      <div className='flex  justify-between items-center h-16  px-10 border-r border-slate-600 border-opacity-20'>
+      <div className='flex  sm:justify-between justify-center items-center h-16 px-4 sm:px-10 border-r border-slate-600 border-opacity-20'>
         <img src={userIMG} alt="avatar" width={55} height={55} className=' rounded-full'/>
-        <span>+{wid.slice(0,11)} ваш номер</span>  
+        <span className='px-2 hidden md:inline'>+{wid.slice(0,11)} <span className='hidden lg:inline'>ваш номер</span></span>  
       </div>
-      <div className='flex flex-col w-full py-4 bg-slate-100 px-6 items-start'>
+      <div className='flex flex-col w-full py-4 bg-slate-100 sm:px-6 items-start'>
         <div>{errorInputHeader ? (<span className='text-xs text-red-700' >Абонент уже в списке</span>) : (null)}</div>
         <div>{errorInputHeaderLength ? (<span className='text-xs text-red-700'>Проверьте номер</span>) : (null)}</div>
-        <div className='flex items-center w-full'>
+        <div className='flex items-center w-full flex-col sm:flex-row'>
           <DebounceInput  minLength={0}
                           debounceTimeout={1000} 
                           type="number" 
@@ -23,7 +23,7 @@ export const HeaderContactList = observer(({wid, userIMG, onChange, value, addCh
                           className='w-full h-8 rounded-xl outline-none bg-slate-200 p-1' 
                           onChange={onChange} 
                           value={value}
-                          blur/>
+                          />
           <button className='text-slate-500 text-3xl flex  items-center pb-1' onClick={addChat} disabled={loaderAddNumber}>
             {loaderAddNumber ? (<span className='text-xs'>loading</span>): (<span>+</span>)}
             </button>  
